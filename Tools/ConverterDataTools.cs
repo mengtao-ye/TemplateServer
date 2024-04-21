@@ -2,7 +2,7 @@
 
 namespace YSF
 {
-    public static class ConvertDataTools
+    public static class ConverterDataTools
     {
         public static byte[] ToByte<T>(T value) where T : IDataConverter, new()
         {
@@ -28,10 +28,10 @@ namespace YSF
             return value;
         }
 
-        public static TPool ToObjectPool<TPool>(byte[] data) where TPool : class,IDataConverter,IPool, new()
+        public static TPool ToObjectPool<TPool>(byte[] data, int startIndex = 0) where TPool : class,IDataConverter,IPool, new()
         {
             TPool value = ClassPool<TPool>.Pop();
-            value.ToValue(data);
+            value.ToValue(ByteTools.SubBytes(data, startIndex));
             return value;
         }
         public static IListData<T> ToListObjectPool<T>(byte[] data, int startIndex = 0) where T : class,IDataConverter, IPool,new()

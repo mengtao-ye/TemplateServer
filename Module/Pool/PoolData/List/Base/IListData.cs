@@ -4,7 +4,7 @@ namespace YSF
 {
     public interface IListData<T> : IPool
     {
-        IList<T> list { get; set; }
+        List<T> list { get; set; }
         T this[int index] { get; set; }
         int Count { get; }
         void Add(T item);
@@ -13,7 +13,7 @@ namespace YSF
         int IndexOf(T item);
         void Insert(int index, T item);
         bool Remove(T item);
-        bool IsNullOrEmpty();
         void RemoveAt(int index);
+        T[] ToArray();
     }
 }

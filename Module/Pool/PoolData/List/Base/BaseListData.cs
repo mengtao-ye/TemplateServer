@@ -4,8 +4,8 @@ namespace YSF
 {
     public abstract class BaseListData<T> : IListData<T>
     {
-        protected IList<T> mList;
-        public IList<T> list { get { return mList; } set { mList = value; } }
+        protected List<T> mList;
+        public List<T> list { get { return mList; } set { mList = value; } }
         public T this[int index] { get { return mList[index]; } set { mList[index] = value; } }
         public int Count { get { return mList.Count; } }
         public bool isPop { get; set; }
@@ -42,11 +42,7 @@ namespace YSF
         {
             mList.RemoveAt(index);
         }
-        public bool IsNullOrEmpty()
-        {
-            if (mList == null) return true;
-            return mList.IsNullOrEmpty();
-        }
+     
         public virtual void PopPool()
         {
             isPop = true;
@@ -57,5 +53,11 @@ namespace YSF
             mList.Clear();
         }
         public abstract void Recycle();
+
+        public T[] ToArray()
+        {
+            if (mList != null) return mList.ToArray();
+            return null;
+        }
     }
 }

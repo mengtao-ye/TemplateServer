@@ -23,15 +23,6 @@ namespace YSF
         {
             if (Preview != null) Preview.Recycle();
         }
-        public IMySqlCommand And
-        {
-            get
-            {
-                IMySqlCommand command = MySQLCommand.And;
-                Concat(command);
-                return command;
-            }
-        }
         public IMySqlCommand Concat(IMySqlCommand command)
         {
             Next = command;
@@ -40,101 +31,149 @@ namespace YSF
             command.mySqlStr = mySqlStr;
             return command;
         }
-        public IMySqlCommand End
+        public IMySqlCommand And
         {
-            get {
-                IMySqlCommand command = MySQLCommand.End;
-                Concat(command);
-                return command;
+            get
+            {
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("AND");
+                Concat(keyword);
+                return keyword;
             }
         }
-        public IMySqlCommand Datebase(string db, string table)
+        public IMySqlCommand End
         {
-            IMySqlCommand command = MySQLCommand.Datebase(db, table);
-            Concat(command);
-            return command;
+            get 
+            {
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData(";");
+                Concat(keyword);
+                return keyword;
+            }
         }
+       
         public IMySqlCommand Or
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.Or;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("OR");
+                Concat(keyword);
+                return keyword;
             }
         }
-        public IMySqlCommand Datebase(string table)
-        {
-            IMySqlCommand command = MySQLCommand.Datebase(MySQLData.DataBaseName, table);
-            Concat(command);
-            return command;
-        }
+      
         public IMySqlCommand Values(Dictionary<string,string> keyValues)
         {
-            IMySqlCommand command = MySQLCommand.Values(keyValues);
-            Concat(command);
-            return command;
+            VALUES select = ClassPool<VALUES>.Pop();
+            select.SetData(keyValues);
+            Concat(select);
+            return select;
         }
         public IMySqlCommand Updates(string field, string value)
         {
-            IMySqlCommand command = MySQLCommand.Updates(field,value);
-            Concat(command);
-            return command;
+            UPDATES UPDATES = ClassPool<UPDATES>.Pop();
+            UPDATES.SetData(field, value);
+            Concat(UPDATES);
+            return UPDATES;
         }
         public IMySqlCommand Limit(int count)
         {
-            IMySqlCommand command = MySQLCommand.Limit(count);
-            Concat(command);
-            return command;
+            LIMIT select = ClassPool<LIMIT>.Pop();
+            select.SetData(count);
+            Concat(select);
+            return select;
         }
         public IMySqlCommand Compare(string field, CompareType compareType, string value)
         {
-            IMySqlCommand command = MySQLCommand.Compare(field,compareType,value);
-            Concat(command);
-            return command;
+            COMPARE COMPARE = ClassPool<COMPARE>.Pop();
+            COMPARE.SetData(field, compareType, value);
+            Concat(COMPARE);
+            return COMPARE;
         }
 
+        public IMySqlCommand Compares(CompareItem[] compareItems)
+        {
+            if (compareItems.IsNullOrEmpty()) return Preview;
+            COMPAREs COMPARE = ClassPool<COMPAREs>.Pop();
+            COMPARE.SetData(compareItems);
+            Concat(COMPARE);
+            return COMPARE;
+        }
+        public IMySqlCommand Order(string field,  MySQLSort sort)
+        {
+            ORDER order = ClassPool<ORDER>.Pop();
+            order.SetData(field, sort);
+            Concat(order);
+            return order;
+        }
         public IMySqlCommand Order(string field, MySQLCoding coding, MySQLSort sort)
         {
-            IMySqlCommand command = MySQLCommand.Order(field, coding, sort);
-            Concat(command);
-            return command;
+            ORDER order = ClassPool<ORDER>.Pop();
+            order.SetData(field, coding, sort);
+            Concat(order);
+            return order;
         }
+
+        public IMySqlCommand Like(string field, string value)
+        {
+            LIKE select = ClassPool<LIKE>.Pop();
+            select.SetData(field, value);
+            Concat(select);
+            return select;
+        }
+        public IMySqlCommand Datebase(string table)
+        {
+            return Datebase(MySQLData.DataBaseName, table);
+        }
+        public IMySqlCommand Datebase(string db, string table)
+        {
+            DATABASE From = ClassPool<DATABASE>.Pop();
+            From.SetData(db, table);
+            Concat(From);
+            return From;
+        }
+
+      
 
         public IMySqlCommand Where
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.Where;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("WHERE");
+                Concat(keyword);
+                return keyword;
             }
         }
         public IMySqlCommand From
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.From;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("FROM");
+                Concat(keyword);
+                return keyword;
             }
         }
         public IMySqlCommand Insert
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.Insert;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("INSERT INTO");
+                Concat(keyword);
+                return keyword;
             }
         }
         public IMySqlCommand Set
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.Set;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("SET");
+                Concat(keyword);
+                return keyword;
             }
         }
 
@@ -142,9 +181,10 @@ namespace YSF
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.LeftParentheses;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("(");
+                Concat(keyword);
+                return keyword;
             }
         }
 
@@ -152,9 +192,22 @@ namespace YSF
         {
             get
             {
-                IMySqlCommand command = MySQLCommand.RightParentheses;
-                Concat(command);
-                return command;
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData(")");
+                Concat(keyword);
+                return keyword;
+            }
+        }
+       
+
+        public IMySqlCommand Update
+        {
+            get
+            {
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData("UPDATE");
+                Concat(keyword);
+                return keyword;
             }
         }
     }

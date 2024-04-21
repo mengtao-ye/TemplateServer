@@ -92,7 +92,7 @@ namespace YSF
         /// <param name="mySQL"></param>
         /// <param name="lastID"></param>
         /// <returns></returns>
-        public bool Add(MySQL mySQL, out int lastID)
+        public bool Add(MySQL mySQL, out long lastID)
         {
             lastID = -1;
             if (mySQL == null || mySQL.parameters == null) return false;
@@ -124,7 +124,7 @@ namespace YSF
                 MySqlDataReader reader = command.ExecuteReader();
                 if (reader.Read())
                 {
-                    lastID = reader.GetInt32(0);
+                    lastID = reader.GetInt64(0);
                 }
                 if (reader != null)
                 {
@@ -138,13 +138,11 @@ namespace YSF
                 CloseCommand();
                 key.Recycle();
                 value.Recycle();
-                mySQL.Recycle();
                 return false;
             }
             CloseCommand();
             key.Recycle();
             value.Recycle();
-            mySQL.Recycle();
             if (rawEffect == 0) return false;
             else return true;
         }
@@ -213,13 +211,11 @@ namespace YSF
                 CloseCommand();
                 key.Recycle();
                 value.Recycle();
-                mySQL.Recycle();
                 return false;
             }
             CloseCommand();
             key.Recycle();
             value.Recycle();
-            mySQL.Recycle();
             if (rawEffect == 0) return false;
             else return true;
         }
@@ -285,15 +281,40 @@ namespace YSF
                 Debug.Log(e.Message);
                 CloseCommand();
                 key.Recycle();
-                mySQL.Recycle();
                 return false;
             }
             CloseCommand();
             key.Recycle();
-            mySQL.Recycle();
             if (rawEffect == 0) return false;
             else return true;
         }
+
+        /// <summary>
+        /// 执行数据
+        /// </summary>
+        /// <param name="mySQL"></param>
+        /// <returns></returns>
+        public bool Exe(string mysql)
+        {
+            if (mysql .IsNullOrEmpty()) return false;
+            CheckCommand();
+            command.CommandText = mysql;
+            int rawEffect = 0;
+            try
+            {
+                rawEffect = command.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+                CloseCommand();
+                return false;
+            }
+            CloseCommand();
+            if (rawEffect == 0) return false;
+            else return true;
+        }
+
         /// <summary>
         /// 更新数据
         /// </summary>
@@ -350,13 +371,11 @@ namespace YSF
                 CloseCommand();
                 parameter.Recycle();
                 where.Recycle();
-                mySQL.Recycle();
                 return false;
             }
             CloseCommand();
             parameter.Recycle();
             where.Recycle();
-            mySQL.Recycle();
             if (rawEffect == 0) return false;
             else return true;
         }
@@ -365,7 +384,7 @@ namespace YSF
         /// </summary>
         /// <param name="mySql"></param>
         /// <returns></returns>
-        public bool ExeMySQL_Exist(string mySql)
+        public bool IsExist(string mySql)
         {
             if (string.IsNullOrEmpty(mySql)) return false;
             CheckCommand();
@@ -414,7 +433,6 @@ namespace YSF
             {
                 CloseCommand();
                 where.Recycle();
-                mySQL.Recycle();
                 return false;
             }
 
@@ -423,7 +441,6 @@ namespace YSF
             mReader.Close();
             CloseCommand();
             where.Recycle();
-            mySQL.Recycle();
             return hasValue;
         }
         /// <summary>
@@ -527,6 +544,48 @@ namespace YSF
             }
         }
 
+        /// <summary>
+        /// 查找所有对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="mysql"></param>
+        /// <returns></returns>
+        public IListData<long> FindAll(string mysql,string key) 
+        {
+            CheckCommand();
+            command.CommandText = mysql;
+            mReader = command.ExecuteReader();
+            if (mReader == null)
+            {
+                CloseCommand();
+                return null;
+            }
+            bool hasValue = false;
+            IListData<long> list = null;
+            while (mReader.Read())
+            {
+                hasValue = true;
+                long value = mReader.GetInt64(key);
+                if (list == null) 
+                {
+                    list = ClassPool<ListData<long>>.Pop();
+                }
+                list.Add(value);
+            }
+            mReader.Dispose();
+            mReader.Close();
+            CloseCommand();
+            if (hasValue)
+            {
+                return list;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public IListData<T> FindAllByListPoolData<T>(MySQL mySQL) where T : class, IMySqlReflection, IPool, new()
         {
             if (mySQL == null || mySQL.parameters == null) return null;
@@ -546,7 +605,6 @@ namespace YSF
             }
             command.CommandText = "SELECT * FROM `" + MySQLData.DataBaseName + "`.`" + mySQL.tableName + "` where " + where.ToString() + ";";
             where.Recycle();
-            mySQL.Recycle();
             mReader = command.ExecuteReader();
             if (mReader == null)
             {
@@ -586,9 +644,13 @@ namespace YSF
                 return null;
             }
             bool hasValue = false;
-            IListData<T> lists = ClassPool<ListPoolData<T>>.Pop();
+            IListData<T> lists = null ;
             while (mReader.Read())
             {
+                if (lists == null)
+                {
+                    lists = ClassPool<ListPoolData<T>>.Pop();
+                }
                 T target = ClassPool<T>.Pop();
                 hasValue = true;
                 target.ReflectionMySQLData(mReader);
@@ -663,7 +725,6 @@ namespace YSF
             {
                 CloseCommand();
                 where.Recycle();
-                mySQL.Recycle();
                 return default(T);
             }
             T target = null;
@@ -678,16 +739,46 @@ namespace YSF
                 mReader.Close();
                 CloseCommand();
                 where.Recycle();
-                mySQL.Recycle();
                 return default(T);
             }
             mReader.Dispose();
             mReader.Close();
             CloseCommand();
             where.Recycle();
-            mySQL.Recycle();
             return target;
         }
+
+        public T FindPool<T>(string mySQL) where T : class, IMySqlReflection, IPool, new()
+        {
+            CheckCommand();
+            command.CommandText = mySQL;
+            mReader = command.ExecuteReader();
+            if (mReader == null)
+            {
+                CloseCommand();
+            
+                return default(T);
+            }
+            T target = null;
+            if (mReader.Read())
+            {
+                target = ClassPool<T>.Pop();
+                target.ReflectionMySQLData(mReader);
+            }
+            else
+            {
+                mReader.Dispose();
+                mReader.Close();
+                CloseCommand();
+             
+                return default(T);
+            }
+            mReader.Dispose();
+            mReader.Close();
+            CloseCommand();
+            return target;
+        }
+
         public T FindPool<T>(MySQL mySQL) where T : class, IMySqlReflection, IPool, new()
         {
             CheckCommand();
@@ -714,7 +805,6 @@ namespace YSF
             {
                 CloseCommand();
                 where?.Recycle();
-                mySQL?.Recycle();
                 return default(T);
             }
             T target = null;
@@ -729,14 +819,12 @@ namespace YSF
                 mReader.Close();
                 CloseCommand();
                 where?.Recycle();
-                mySQL?.Recycle();
                 return default(T);
             }
             mReader.Dispose();
             mReader.Close();
             CloseCommand();
             where?.Recycle();
-            mySQL?.Recycle();
             return target;
         }
         /// <summary>
@@ -771,7 +859,6 @@ namespace YSF
             {
                 CloseCommand();
                 where.Recycle();
-                mySQL.Recycle();
                 return 0;
             }
             int account = 0;
@@ -783,7 +870,6 @@ namespace YSF
             mReader.Close();
             CloseCommand();
             where.Recycle();
-            mySQL.Recycle();
             return account;
         }
     }

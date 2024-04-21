@@ -14,9 +14,18 @@ namespace YSF
         {
             return DictionaryTools.DictionaryToBytes(@this);
         }
+        public static byte[] ToBytes(this IList<int> @this)
+        {
+            return ListTools.GetBytes(@this);
+        }
+        public static byte[] ToBytes(this IList<long> @this) 
+        {
+            return ListTools.GetBytes(@this);
+        }
+
         public static byte[] ToBytes<T>(this IList<T> @this) where T : IDataConverter, new()
         {
-            return ConvertDataTools.ToByte(@this);
+            return ConverterDataTools.ToByte(@this);
         }
         public static byte[] ToBytes(this IList<byte[]> @this)
         {
@@ -68,8 +77,17 @@ namespace YSF
         }
         public static IListData<T> ToListBytes<T>(this byte[] @this) where T : IDataConverter, new()
         {
-            return ConvertDataTools.ToListObject<T>(@this);
+            return ConverterDataTools.ToListObject<T>(@this);
         }
+        public static IListData<long> ToListLong(this byte[] @this)
+        {
+            return ListTools.ToLongList(@this);
+        }
+        public static IListData<int> ToListInt(this byte[] @this)
+        {
+            return ListTools.ToIntList(@this);
+        }
+
         public static IListData<byte[]> ToListBytes(this byte[] @this) {
             return ListTools.ToList(@this);
         }
@@ -77,9 +95,13 @@ namespace YSF
         {
             return BitConverter.ToDouble(@this, 0);
         }
+        public static long ToLong(this byte[] @this,int startIndex)
+        {
+            return BitConverter.ToInt64(@this, startIndex);
+        }
         public static long ToLong(this byte[] @this)
         {
-            return BitConverter.ToInt64(@this, 0);
+            return ToLong(@this,0);
         }
         public static int ToInt(this byte[] @this,int startIndex)
         {
@@ -93,10 +115,24 @@ namespace YSF
         {
             return BitConverter.ToUInt32(@this, 0);
         }
-
+        /// <summary>
+        ///  将字节数组转换成short
+        /// </summary>
+        /// <param name="this"></param>
+        /// <returns></returns>
         public static short ToShort(this byte[] @this)
         {
-            return BitConverter.ToInt16(@this, 0);
+            return ToShort(@this, 0);
+        }
+
+        /// <summary>
+        ///  将字节数组转换成short
+        /// </summary>
+        /// <param name="this"></param>
+        /// <returns></returns>
+        public static short ToShort(this byte[] @this, int startIndex)
+        {
+            return BitConverter.ToInt16(@this, startIndex);
         }
         public static ushort ToUShort(this byte[] @this)
         {
@@ -108,12 +144,20 @@ namespace YSF
         }
         public static bool ToBool(this byte[] @this)
         {
-            return @this[0] == 1;
+            return ToBool(@this,0);
+        }
+        public static bool ToBool(this byte[] @this,int index)
+        {
+            return @this[index] == 1;
         }
         public static string ToStr(this byte[] @this)
         {
             return Encoding.UTF8.GetString(@this);
-        } 
+        }
+        public static string ToStr(this byte[] @this,int startIndex,int count)
+        {
+            return Encoding.UTF8.GetString(@this, startIndex,count);
+        }
         #endregion
     }
 }
