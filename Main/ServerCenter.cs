@@ -40,9 +40,9 @@
             {
                 throw new System.Exception("tcp ip address is null or empty");
             }
-            if (map == null || map.Count == 0)
+            if (map == null )
             {
-                throw new System.Exception("TCPRequestHandle is null or empty");
+                throw new System.Exception("TCPRequestHandle is null");
             }
             if (ushort.MinValue >= port || port >= ushort.MaxValue)
             {
