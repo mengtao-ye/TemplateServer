@@ -12,45 +12,14 @@
             }
             base.parameters = parameters;
         }
-
-        public void SetData(string tableName, string key, string value)
-        {
-            IDictionaryData<string, string> dict = ClassPool<DictionaryData<string, string>>.Pop();
-            dict.Add(key,value);
-            SetData(tableName, dict);
-        }
-        public void SetData(string tableName, string key1, string value1, string key2, string value2)
+        public void SetData(string tableName, string key1, string value1, string key2 = null, string value2=null, string key3 = null, string value3=null, string key4 = null, string value4 = null, string key5 = null, string value5 = null)
         {
             IDictionaryData<string, string> dict = ClassPool<DictionaryData<string, string>>.Pop();
             dict.Add(key1, value1);
-            dict.Add(key2, value2);
-            SetData(tableName, dict);
-        }
-        public void SetData(string tableName, string key1, string value1, string key2, string value2, string key3, string value3)
-        {
-            IDictionaryData<string, string> dict = ClassPool<DictionaryData<string, string>>.Pop();
-            dict.Add(key1, value1);
-            dict.Add(key2, value2);
-            dict.Add(key3, value3);
-            SetData(tableName, dict);
-        }
-        public void SetData(string tableName, string key1, string value1, string key2, string value2, string key3, string value3, string key4, string value4)
-        {
-            IDictionaryData<string, string> dict = ClassPool<DictionaryData<string, string>>.Pop();
-            dict.Add(key1, value1);
-            dict.Add(key2, value2);
-            dict.Add(key3, value3);
-            dict.Add(key4, value4);
-            SetData(tableName, dict);
-        }
-        public void SetData(string tableName, string key1, string value1, string key2, string value2, string key3, string value3, string key4, string value4, string key5, string value5)
-        {
-            IDictionaryData<string, string> dict = ClassPool<DictionaryData<string, string>>.Pop();
-            dict.Add(key1, value1);
-            dict.Add(key2, value2);
-            dict.Add(key3, value3);
-            dict.Add(key4, value4);
-            dict.Add(key5, value5);
+            if(key2!=null && value2 !=null) dict.Add(key2, value2);
+            if(key3 != null && value3 != null) dict.Add(key3, value3);
+            if(key4 != null && value4 != null) dict.Add(key4, value4);
+            if(key5 != null && value5 != null) dict.Add(key5, value5);
             SetData(tableName, dict);
         }
         public override void Recycle()
