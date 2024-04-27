@@ -138,9 +138,9 @@ namespace YSF
         {
             return BitConverter.ToUInt16(@this, 0);
         }
-        public static byte ToByte(this byte[] @this)
+        public static byte ToByte(this byte[] @this,int index = 0)
         {
-            return @this[0];
+            return @this[index];
         }
         public static bool ToBool(this byte[] @this)
         {
