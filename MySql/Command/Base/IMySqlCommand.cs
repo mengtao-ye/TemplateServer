@@ -17,6 +17,7 @@ namespace YSF
         IMySqlCommand Order(string field, MySQLCoding coding, MySQLSort sort);
         IMySqlCommand Order(string field,  MySQLSort sort);
         IMySqlCommand Like(string field, string value);
+        IMySqlCommand Str(string str);
         IMySqlCommand And { get; }
         IMySqlCommand Or { get; }
         IMySqlCommand End { get; }

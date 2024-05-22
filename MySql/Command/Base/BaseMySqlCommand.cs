@@ -134,7 +134,14 @@ namespace YSF
             return From;
         }
 
-      
+        public IMySqlCommand Str(string str)
+        {
+                KEYWORD keyword = ClassPool<KEYWORD>.Pop();
+                keyword.SetData(str);
+                Concat(keyword);
+                return keyword;
+        }
+
 
         public IMySqlCommand Where
         {
