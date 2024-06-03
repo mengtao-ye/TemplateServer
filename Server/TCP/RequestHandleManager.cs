@@ -2,17 +2,18 @@
 {
     public class RequestHandleManager
     {
-        private TCPServer mTcpServer;
+        private TcpServer mTcpServer;
         private Client mClient;
-        public RequestHandleManager(TCPServer socketModule,Client client )
+        public RequestHandleManager(TcpServer socketModule,Client client )
         {
             mClient = client;
             mTcpServer = socketModule;
         }
-        public byte[] Response( short requestCode, short actionCode,  byte[] data)
+        public byte[] Response( short requestCode, short actionCode,  byte[] data,Client client)
         {
-            if (mTcpServer.map.Contains(requestCode)) {
-                return mTcpServer.map.Get(requestCode).Response(actionCode,data);
+            if (mTcpServer.map.Contains(requestCode)) 
+            {
+                return mTcpServer.map.Get(requestCode).Response(actionCode,data, client);
             }
             return null;
         }

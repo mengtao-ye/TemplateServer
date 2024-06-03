@@ -296,7 +296,7 @@ namespace YSF
         /// <returns></returns>
         public bool Exe(string mysql)
         {
-            if (mysql .IsNullOrEmpty()) return false;
+            if (mysql.IsNullOrEmpty()) return false;
             CheckCommand();
             command.CommandText = mysql;
             int rawEffect = 0;
@@ -443,6 +443,44 @@ namespace YSF
             where.Recycle();
             return hasValue;
         }
+
+        /// <summary>
+        /// 查找对象
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="target"></param>
+        /// <param name="mysql"></param>
+        /// <returns></returns>
+        public int Find(string mysql, int valueIndex)
+        {
+            CheckCommand();
+            command.CommandText = mysql;
+            mReader = command.ExecuteReader();
+            if (mReader == null)
+            {
+                CloseCommand();
+                return 0;
+            }
+            bool hasValue = false;
+            int value = 0;
+            if (mReader.Read())
+            {
+                hasValue = true;
+                value = mReader.GetInt32(valueIndex);
+            }
+            mReader.Dispose();
+            mReader.Close();
+            CloseCommand();
+            if (hasValue)
+            {
+                return value;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
         /// <summary>
         /// 查找对象
         /// </summary>
@@ -523,11 +561,15 @@ namespace YSF
                 return null;
             }
             bool hasValue = false;
-            List<T> lists = new List<T>();
-            T classTarget = ClassPool<T>.Pop();
+            List<T> lists = null;
             while (mReader.Read())
             {
+                if (lists == null) 
+                {
+                    lists = new List<T>();
+                }
                 hasValue = true;
+                T classTarget = ClassPool<T>.Pop();
                 classTarget.ReflectionMySQLData(mReader);
                 lists.Add(classTarget);
             }
@@ -551,7 +593,7 @@ namespace YSF
         /// <param name="target"></param>
         /// <param name="mysql"></param>
         /// <returns></returns>
-        public IListData<long> FindAll(string mysql,string key) 
+        public IListData<long> FindAll(string mysql, string key)
         {
             CheckCommand();
             command.CommandText = mysql;
@@ -567,7 +609,7 @@ namespace YSF
             {
                 hasValue = true;
                 long value = mReader.GetInt64(key);
-                if (list == null) 
+                if (list == null)
                 {
                     list = ClassPool<ListData<long>>.Pop();
                 }
@@ -586,6 +628,7 @@ namespace YSF
             }
         }
 
+    
         public IListData<T> FindAllByListPoolData<T>(MySQL mySQL) where T : class, IMySqlReflection, IPool, new()
         {
             if (mySQL == null || mySQL.parameters == null) return null;
@@ -612,9 +655,13 @@ namespace YSF
                 return null;
             }
             bool hasValue = false;
-            IListData<T> lists = ClassPool<ListPoolData<T>>.Pop();
+            IListData<T> lists = null;
             while (mReader.Read())
             {
+                if (lists == null)
+                {
+                    lists = ClassPool<ListPoolData<T>>.Pop();
+                }
                 T target = ClassPool<T>.Pop();
                 hasValue = true;
                 target.ReflectionMySQLData(mReader);
@@ -644,7 +691,7 @@ namespace YSF
                 return null;
             }
             bool hasValue = false;
-            IListData<T> lists = null ;
+            IListData<T> lists = null;
             while (mReader.Read())
             {
                 if (lists == null)
@@ -668,6 +715,41 @@ namespace YSF
                 return null;
             }
         }
+
+        public IListData<int> FindAllByListData(string mysql, int valueIndex)
+        {
+            CheckCommand();
+            command.CommandText = mysql;
+            mReader = command.ExecuteReader();
+            if (mReader == null)
+            {
+                CloseCommand();
+                return null;
+            }
+            bool hasValue = false;
+            IListData<int> lists = null;
+            while (mReader.Read())
+            {
+                hasValue = true;
+                if (lists == null)
+                {
+                    lists = ClassPool<ListData<int>>.Pop();
+                }
+                lists.Add(mReader.GetInt32(valueIndex));
+            }
+            mReader.Dispose();
+            mReader.Close();
+            CloseCommand();
+            if (hasValue)
+            {
+                return lists;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
         public IListData<T> FindAllByListData<T>(string mysql) where T : class, IMySqlReflection, IPool, new()
         {
             CheckCommand();
@@ -679,9 +761,13 @@ namespace YSF
                 return null;
             }
             bool hasValue = false;
-            IListData<T> lists = ClassPool<ListData<T>>.Pop();
+            IListData<T> lists = null;
             while (mReader.Read())
             {
+                if (lists == null)
+                {
+                    lists = ClassPool<ListData<T>>.Pop();
+                }
                 T target = ClassPool<T>.Pop();
                 hasValue = true;
                 target.ReflectionMySQLData(mReader);
@@ -756,7 +842,7 @@ namespace YSF
             if (mReader == null)
             {
                 CloseCommand();
-            
+
                 return default(T);
             }
             T target = null;
@@ -770,7 +856,7 @@ namespace YSF
                 mReader.Dispose();
                 mReader.Close();
                 CloseCommand();
-             
+
                 return default(T);
             }
             mReader.Dispose();

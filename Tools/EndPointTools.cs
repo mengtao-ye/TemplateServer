@@ -25,7 +25,7 @@ namespace YSF
         public static byte[] IPAddresToBytes(string ip)
         {
             string[] strs = ip.Split(':');
-            byte[] bytes = new byte[8];
+            byte[] bytes = new byte[4];
             string[] ips = strs[0].Split('.');
             for (int i = 0; i < 4; i++)
             {

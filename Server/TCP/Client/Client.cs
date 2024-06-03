@@ -7,13 +7,14 @@ namespace YSF
     public class Client
     {
         private Socket mClient;
-        private TCPServer mServer;
-        public TCPServer server { get { return mServer; } }
+        private TcpServer mServer;
+        public TcpServer server { get { return mServer; } }
         private Message mMsg;
         public int userID = CommonConstData.INVAILD_VALUE;
         private RequestHandleManager mRequestHandleManager;
-        public Client(Socket client, TCPServer server)
+        public Client(Socket client, TcpServer server)
         {
+            Debug.Log("用户:"+client.RemoteEndPoint.ToString()+"连接成功");
             mClient = client;
             mServer = server;
             mMsg = new Message();
@@ -48,7 +49,7 @@ namespace YSF
 
         private void ResponseData(short requestCode, short actionCode,byte[] data)
         {
-            byte[] returnCode = mRequestHandleManager.Response(requestCode, actionCode, data);
+            byte[] returnCode = mRequestHandleManager.Response(requestCode, actionCode, data, this);
             if (returnCode != null)
             {
                 Send(actionCode, returnCode);
@@ -71,6 +72,7 @@ namespace YSF
         public void Close()
         {
             if (mClient == null) return;
+            Debug.Log("用户:" + mClient.RemoteEndPoint.ToString() + "断开连接");
             mClient.Shutdown(SocketShutdown.Both);
             mClient.Close();
             mClient = null;

@@ -9,8 +9,8 @@ namespace YSF
         public  void SetData(Dictionary<string,string> values)
         {
             if (values.IsNullOrEmpty()) throw new Exception("values cant null!");
-            string key = "";
-            string value = "";
+            string key = string.Empty;
+            string value = string.Empty;
             int count = 0;
             foreach (var item in values)
             {

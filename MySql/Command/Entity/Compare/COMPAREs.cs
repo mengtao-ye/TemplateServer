@@ -7,7 +7,7 @@
         {
             for (int i = 0; i < compareItems.Length; i++)
             {
-                string compare = "";
+                string compare = string.Empty;
                 switch (compareItems[i].compareType)
                 {
                     case CompareType.Equal:

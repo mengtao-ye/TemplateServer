@@ -58,7 +58,7 @@ namespace YSF
         }
         public static byte[] ToBytes(this byte @this)
         {
-            return BitConverter.GetBytes(@this);
+            return new byte[] { @this };
         }
         public static byte[] ToBytes(this bool @this)
         {

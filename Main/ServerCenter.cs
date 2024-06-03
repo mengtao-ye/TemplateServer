@@ -7,8 +7,8 @@
     {
         private UdpServer mUdpServer;//Udp服务器对象
         public UdpServer udpServer { get { return mUdpServer; } }//Udp服务器对象
-        private TCPServer mTcpServer;//Tcp服务器对象
-        public TCPServer tcpServer { get { return mTcpServer; } }//Tcp服务器对象
+        private TcpServer mTcpServer;//Tcp服务器对象
+        public TcpServer tcpServer { get { return mTcpServer; } }//Tcp服务器对象
         private MySQLManager mMySQLManager;//数据库管理类
         public MySQLManager mySQLManager { get { return mMySQLManager; } }//数据库管理类
 
@@ -48,7 +48,7 @@
             {
                 throw new System.Exception("port out index ");
             }
-            mTcpServer = new TCPServer(map);
+            mTcpServer = new TcpServer(map);
             mTcpServer.Run(ipAddress, port);
         }
 

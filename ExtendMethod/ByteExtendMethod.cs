@@ -4,6 +4,9 @@ namespace YSF
 {
     public static class ByteExtendMethod
     {
+
+
+
         /// <summary>
         ///  获取截取的字节数据
         /// </summary>

@@ -13,7 +13,7 @@
         public override string mySqlStr { get; set; }
         public void SetData(string fieldName,CompareType compareType ,string value)
         {
-            string compare = "";
+            string compare = string.Empty;
             switch (compareType)
             {
                 case CompareType.Equal:

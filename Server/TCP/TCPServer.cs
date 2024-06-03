@@ -1,4 +1,5 @@
 ﻿
+using SubServer;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -7,12 +8,12 @@ using System.Net.Sockets;
 
 namespace YSF
 {
-    public class TCPServer
+    public class TcpServer : ITcpServer
     {
         private Socket mTcpSocket;//Tcp对象
         private List<Client> mClinetDict;//当前所有客户端集合
         public IMap<short, ITCPRequestHandle> map { get; private set; }
-        public TCPServer(IMap<short, ITCPRequestHandle> map)
+        public TcpServer(IMap<short, ITCPRequestHandle> map)
         {
             this.map = map;
             Init();
