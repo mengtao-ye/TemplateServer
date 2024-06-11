@@ -28,7 +28,7 @@ namespace YSF
             return value;
         }
 
-        public static TPool ToObjectPool<TPool>(byte[] data, int startIndex = 0) where TPool : class,IDataConverter,IPool, new()
+        public static TPool ToPoolObject<TPool>(byte[] data, int startIndex = 0) where TPool : class,IDataConverter,IPool, new()
         {
             TPool value = ClassPool<TPool>.Pop();
             value.ToValue(ByteTools.SubBytes(data, startIndex));
@@ -41,7 +41,7 @@ namespace YSF
             IListData<byte[]> listBytes = ListTools.ToList(data, startIndex);
             for (int i = 0; i < listBytes.Count; i++)
             {
-                byteList.Add(ToObjectPool<T>(listBytes[i]));
+                byteList.Add(ToPoolObject<T>(listBytes[i]));
             }
             listBytes.Recycle();
             return byteList;

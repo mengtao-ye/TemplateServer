@@ -60,7 +60,7 @@ namespace YSF
         /// <returns></returns>
         private byte[] AnalysiseReceiveData(short udpCode, Action<byte[], int, EndPoint,short> callBack, byte[] data, EndPoint point)
         {
-            UdpBigDataItem bigData = ConverterDataTools.ToObjectPool<UdpBigDataItem>(data);
+            UdpBigDataItem bigData = ConverterDataTools.ToPoolObject<UdpBigDataItem>(data);
             if (bigData == null) return null;
             if (!mBigData.ContainsKey(bigData.userID)) mBigData.Add(bigData.userID,ClassPool<DictionaryPoolData<short, IListData<UdpBigDataItem>>>.Pop());
             IDictionaryData<short, IListData<UdpBigDataItem>>  bigDataDict = mBigData[bigData.userID];

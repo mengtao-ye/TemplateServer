@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SubServer;
+using System;
 using System.Net.Sockets;
 
 
@@ -12,9 +13,9 @@ namespace YSF
         private Message mMsg;
         public int userID = CommonConstData.INVAILD_VALUE;
         private RequestHandleManager mRequestHandleManager;
+        public long Token;//用户Token
         public Client(Socket client, TcpServer server)
         {
-            Debug.Log("用户:"+client.RemoteEndPoint.ToString()+"连接成功");
             mClient = client;
             mServer = server;
             mMsg = new Message();
@@ -73,7 +74,7 @@ namespace YSF
         public void Close()
         {
             if (mClient == null) return;
-
+            TokenManager.Instance.RemoveToken(Token);
             mClient.Shutdown(SocketShutdown.Both);
             mClient.Close();
             mClient = null;
