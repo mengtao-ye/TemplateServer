@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections;
+using System.Collections.Generic;
 
 namespace YSF
 {
@@ -70,5 +71,6 @@ namespace YSF
         {
             mDict?.Clear();
         }
+
     }
 }

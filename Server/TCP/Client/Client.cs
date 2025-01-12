@@ -1,5 +1,4 @@
-﻿using SubServer;
-using System;
+﻿using System;
 using System.Net.Sockets;
 
 
@@ -71,10 +70,9 @@ namespace YSF
         /// <summary>
         /// 关闭连接
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             if (mClient == null) return;
-            TokenManager.Instance.RemoveToken(Token);
             mClient.Shutdown(SocketShutdown.Both);
             mClient.Close();
             mClient = null;
