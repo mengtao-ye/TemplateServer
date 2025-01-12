@@ -92,7 +92,7 @@ namespace YSF
             byte[] data = new byte[data1.Length + 1];
             for (int i = 0; i < data1.Length; i++)
             {
-                data[i + 1] = data1[i];
+                data[i] = data1[i];
             }
             data[data1.Length] = data2;
             return data;

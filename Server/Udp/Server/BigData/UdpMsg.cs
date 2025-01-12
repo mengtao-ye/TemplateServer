@@ -23,7 +23,7 @@ namespace YSF
      
         public byte[] ToBytes()
         {
-            if (Data == null)
+            if (Data.IsNullOrEmpty())
             {
                 return ByteTools.Concat( BitConverter.GetBytes(udpCode),(byte)UdpMsgType.SmallData);
             }

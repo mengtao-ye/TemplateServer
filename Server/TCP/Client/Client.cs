@@ -20,7 +20,6 @@ namespace YSF
             mServer = server;
             mMsg = new Message();
             mRequestHandleManager = new RequestHandleManager(mServer,this);
-            Debug.Log("用户连接:" + client.RemoteEndPoint.ToString());
             Receive();
         }
         private void Receive()
@@ -71,10 +70,10 @@ namespace YSF
         /// <summary>
         /// 关闭连接
         /// </summary>
-        public void Close()
+        public virtual void Close()
         {
             if (mClient == null) return;
-            TokenManager.Instance.RemoveToken(Token);
+            mServer.clientLostCallBack?.Invoke(this);
             mClient.Shutdown(SocketShutdown.Both);
             mClient.Close();
             mClient = null;

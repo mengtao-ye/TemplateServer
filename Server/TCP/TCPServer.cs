@@ -8,11 +8,12 @@ using System.Net.Sockets;
 
 namespace YSF
 {
-    public class TcpServer : ITcpServer
+    public class TcpServer : ITcpServer 
     {
         private Socket mTcpSocket;//Tcp对象
         private List<Client> mClinetDict;//当前所有客户端集合
         public IMap<short, ITCPRequestHandle> map { get; private set; }
+        public Action<Client> clientLostCallBack { get; set; } 
         public TcpServer(IMap<short, ITCPRequestHandle> map)
         {
             this.map = map;
@@ -62,5 +63,6 @@ namespace YSF
                 mClinetDict.Remove(client);
             }
         }
+
     }
 }
